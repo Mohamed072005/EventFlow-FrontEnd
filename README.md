@@ -1,21 +1,18 @@
 # EventFlow - Modern Event Platform Frontend
 
 ## Overview
-EventFlow is a Next.js-powered frontend application for the EventHub platform, providing users with a seamless interface to discover, organize, and participate in events. Built with React 19 and Material UI, it offers a responsive and intuitive user experience with real-time notifications and interactive features.
+EventFlow is a Next.js-powered frontend application for the EventFlow platform, providing users with a seamless interface to discover, organize, and participate in events. Built with React 19 and Material UI, it offers a responsive and intuitive user experience with real-time notifications and interactive features.
 
 ## Features
 
 ### User Experience
 - Responsive design optimized for all devices
 - Intuitive event browsing and discovery
-- Personal dashboard showing hosted and attended events
-- Real-time notifications for event updates
 - Interactive calendar integration
 
 ### Technical Capabilities
 - JWT authentication and secure API communication
 - State management with Zustand
-- Advanced date handling with Date-FN and DayJS
 - Material UI components for consistent design language
 - TypeScript for type safety and better development experience
 
@@ -42,8 +39,8 @@ EventFlow is a Next.js-powered frontend application for the EventHub platform, p
 
 1. Clone the repository
    ```bash
-   git clone <repository-url>
-   cd event-flow
+   git clone https://github.com/Mohamed072005/EventFlow-FrontEnd.git
+   cd EventFlow-FrontEnd
    ```
 
 2. Install dependencies
@@ -71,16 +68,16 @@ EventFlow is a Next.js-powered frontend application for the EventHub platform, p
 ## Application Structure
 
 ```
-event-flow/
+EventFlow-FrontEnd/
 ├── components/         # Reusable UI components
 ├── hooks/              # Custom React hooks
-├── pages/              # Next.js pages
+├── config/             # Configuration files and constants
 ├── public/             # Static assets
-├── services/           # API services
+├── lib/                # API services and utility functions
 ├── store/              # Zustand state management
-├── styles/             # Global styles
+├── app/                # Next.js App Router pages and layouts
 ├── types/              # TypeScript type definitions
-└── utils/              # Utility functions
+└── context/            # React Context providers
 ```
 
 ## Key Features Implementation
@@ -115,11 +112,3 @@ The application is fully responsive with adaptive layouts using a combination of
 ## Deployment
 
 The application is optimized for deployment on Vercel, but can be deployed to any hosting platform that supports Next.js applications.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
