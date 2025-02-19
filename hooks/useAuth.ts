@@ -60,11 +60,7 @@ const useAuth = (): UseAuth => {
         }
     }
 
-    const logout = () => {
-        localStorage.removeItem("authToken");
-    }
-
-    return { login, logout, register, error, loading };
+    return { login, register, error, loading };
 }
 
 export default useAuth;

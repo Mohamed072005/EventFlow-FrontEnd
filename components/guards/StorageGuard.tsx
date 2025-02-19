@@ -12,7 +12,6 @@ const StorageGuard: React.FC<StorageGuardProps> = ({ children }) => {
     const pathName = usePathname();
     const router = useRouter();
     useEffect(() => {
-        console.log(pathName, router);
         if (pathName === '/login' || pathName === '/register') {
             StoragesGuard.clearAuthStorage();
         }
