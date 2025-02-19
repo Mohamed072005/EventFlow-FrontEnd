@@ -4,6 +4,7 @@ import "./globals.css";
 import {CssBaseline} from "@mui/material";
 import {ToastProvider} from "@/contexts/ToastContext";
 import StorageGuard from "@/components/guards/StorageGuard";
+import AuthGuard from "@/components/guards/AuthGuard";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,9 +33,11 @@ export default function RootLayout({
       >
           <CssBaseline />
             <StorageGuard>
-                <ToastProvider>
-                    {children}
-                </ToastProvider>
+                <AuthGuard>
+                    <ToastProvider>
+                        {children}
+                    </ToastProvider>
+                </AuthGuard>
             </StorageGuard>
       </body>
     </html>

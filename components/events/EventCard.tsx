@@ -9,7 +9,7 @@ interface EventCardProps {
     id: string
     title: string
     description: string
-    date: Date
+    date: string
     location: string
     participants: number
     maxParticipants: number

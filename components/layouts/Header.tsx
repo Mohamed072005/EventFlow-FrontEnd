@@ -31,17 +31,22 @@ import {
     ExitToApp,
     CalendarMonth,
     Settings,
+    Login
 } from "@mui/icons-material"
 import Link from "next/link"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import {useState} from "react"
+import {useRouter} from "next/navigation"
+import {CreateEventModal} from "@/components/events/CreateEventModal"
+import useAuthStore from "@/store/authStore";
 
 export function Header() {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [createEventOpen, setCreateEventOpen] = useState(false)
     const router = useRouter()
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down("md"))
+    const {isAuthenticated, user} = useAuthStore()
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget)
@@ -57,22 +62,17 @@ export function Header() {
     }
 
     const menuItems = [
-        { icon: <Person />, label: "Profile", path: "/profile" },
-        { icon: <CalendarMonth />, label: "My Events", path: "/dashboard" },
-        { icon: <Settings />, label: "Settings", path: "/settings" },
-        { icon: <ExitToApp />, label: "Logout", path: "/login" },
+        {icon: <Person/>, label: "Profile", path: "/profile"},
+        {icon: <CalendarMonth/>, label: "My Events", path: "/dashboard"},
+        {icon: <Settings/>, label: "Settings", path: "/settings"},
+        {icon: <ExitToApp/>, label: "Logout", path: "/login"},
     ]
 
     const navItems = [
         {
-            icon: <Dashboard />,
+            icon: <Dashboard/>,
             label: "Dashboard",
             path: "/dashboard",
-        },
-        {
-            icon: <Event />,
-            label: "Create Event",
-            path: "/events/create",
         },
     ]
 
@@ -85,18 +85,18 @@ export function Header() {
                 boxShadow: theme.shadows[2],
             }}
         >
-            <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, sm: 4 } }}>
+            <Toolbar sx={{justifyContent: "space-between", px: {xs: 2, sm: 4}}}>
                 {/* Logo Section */}
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Box sx={{display: "flex", alignItems: "center", gap: 1}}>
                     {isMobile && (
-                        <IconButton color="primary" edge="start" onClick={() => setMobileMenuOpen(true)} sx={{ mr: 1 }}>
-                            <MenuIcon />
+                        <IconButton color="primary" edge="start" onClick={() => setMobileMenuOpen(true)} sx={{mr: 1}}>
+                            <MenuIcon/>
                         </IconButton>
                     )}
                     <EventAvailable
                         sx={{
                             color: "primary.main",
-                            fontSize: { xs: 28, sm: 32 },
+                            fontSize: {xs: 28, sm: 32},
                             transform: "rotate(-10deg)",
                         }}
                     />
@@ -108,7 +108,7 @@ export function Header() {
                             textDecoration: "none",
                             color: "text.primary",
                             fontWeight: 700,
-                            fontSize: { xs: "1.2rem", sm: "1.5rem" },
+                            fontSize: {xs: "1.2rem", sm: "1.5rem"},
                             letterSpacing: "-0.5px",
                             transition: "all 0.3s ease",
                             "&:hover": {
@@ -121,22 +121,66 @@ export function Header() {
                     </Typography>
                 </Box>
 
-                {!isMobile && (
-                    <Box
-                        sx={{
-                            display: "flex",
-                            gap: 1,
-                            alignItems: "center",
-                            ml: "auto",
-                            mr: 2,
-                        }}
-                    >
-                        {navItems.map((item) => (
+                {/* Navigation Section - Desktop */}
+                {/*{!isMobile && (*/}
+                {/*    <Box*/}
+                {/*        sx={{*/}
+                {/*            display: "flex",*/}
+                {/*            gap: 1,*/}
+                {/*            alignItems: "center",*/}
+                {/*            ml: "auto",*/}
+                {/*            mr: 2,*/}
+                {/*        }}*/}
+                {/*    >*/}
+                {/*        {navItems.map((item) => (*/}
+                {/*            <Button*/}
+                {/*                key={item.path}*/}
+                {/*                component={Link}*/}
+                {/*                href={item.path}*/}
+                {/*                startIcon={item.icon}*/}
+                {/*                sx={{*/}
+                {/*                    color: "text.primary",*/}
+                {/*                    px: 2,*/}
+                {/*                    py: 1,*/}
+                {/*                    borderRadius: "12px",*/}
+                {/*                    transition: "all 0.3s ease",*/}
+                {/*                    "&:hover": {*/}
+                {/*                        backgroundColor: "action.hover",*/}
+                {/*                        transform: "translateY(-2px)",*/}
+                {/*                    },*/}
+                {/*                }}*/}
+                {/*            >*/}
+                {/*                {item.label}*/}
+                {/*            </Button>*/}
+                {/*        ))}*/}
+                {/*    </Box>*/}
+                {/*)}*/}
+
+                {/* Actions Section */}
+                {isAuthenticated ? (
+                    <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
+                        <Button
+                            component={Link}
+                            href='/dashboard'
+                            startIcon={<Dashboard/>}
+                            sx={{
+                                color: "text.primary",
+                                px: 2,
+                                py: 1,
+                                borderRadius: "12px",
+                                transition: "all 0.3s ease",
+                                "&:hover": {
+                                    backgroundColor: "action.hover",
+                                    transform: "translateY(-2px)",
+                                },
+                            }}
+                        >
+                            Dashboard
+                        </Button>
+                        {user?.role === "organizer" && (
                             <Button
-                                key={item.path}
-                                component={Link}
-                                href={item.path}
-                                startIcon={item.icon}
+                                startIcon={<Event/>}
+                                onClick={() => setCreateEventOpen(true)}
                                 sx={{
                                     color: "text.primary",
                                     px: 2,
@@ -149,64 +193,84 @@ export function Header() {
                                     },
                                 }}
                             >
-                                {item.label}
+                                Create Event
                             </Button>
-                        ))}
-                    </Box>
-                )}
-
-                <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-                    <IconButton
-                        color="primary"
-                        component={Link}
-                        href="/notifications"
-                        sx={{
-                            transition: "transform 0.3s ease",
-                            "&:hover": { transform: "translateY(-2px)" },
-                        }}
-                    >
-                        <Badge
-                            badgeContent={4}
-                            color="error"
+                        )}
+                        <IconButton
+                            color="primary"
+                            component={Link}
+                            href="/notifications"
                             sx={{
-                                "& .MuiBadge-badge": {
-                                    animation: "pulse 2s infinite",
-                                    "@keyframes pulse": {
-                                        "0%": { transform: "scale(0.95)" },
-                                        "70%": { transform: "scale(1)" },
-                                        "100%": { transform: "scale(0.95)" },
-                                    },
-                                },
+                                color: 'text.primary',
+                                transition: "transform 0.3s ease",
+                                "&:hover": {transform: "translateY(-2px)"},
                             }}
                         >
-                            <NotificationsIcon />
-                        </Badge>
-                    </IconButton>
-                    <IconButton
-                        edge="end"
-                        onClick={handleMenu}
+                            <Badge
+                                badgeContent={4}
+                                color="error"
+                                sx={{
+                                    "& .MuiBadge-badge": {
+                                        animation: "pulse 2s infinite",
+                                        "@keyframes pulse": {
+                                            "0%": {transform: "scale(0.95)"},
+                                            "70%": {transform: "scale(1)"},
+                                            "100%": {transform: "scale(0.95)"},
+                                        },
+                                    },
+                                }}
+                            >
+                                <NotificationsIcon/>
+                            </Badge>
+                        </IconButton>
+                        <IconButton
+                            edge="end"
+                            onClick={handleMenu}
+                            sx={{
+                                transition: "transform 0.3s ease",
+                                "&:hover": {transform: "translateY(-2px)"},
+                            }}
+                        >
+                            <Avatar
+                                sx={{
+                                    width: 35,
+                                    height: 35,
+                                    border: "2px solid",
+                                    borderColor: "primary.main",
+                                }}
+                            />
+                        </IconButton>
+                    </Box>
+                   ) : (
+                    <Button
+                        component={Link}
+                        href='/login'
+                        startIcon={<Login />}
                         sx={{
-                            transition: "transform 0.3s ease",
-                            "&:hover": { transform: "translateY(-2px)" },
+                            color: "text.primary",
+                            px: 2,
+                            py: 1,
+                            borderRadius: "12px",
+                            transition: "all 0.3s ease",
+                            "&:hover": {
+                                backgroundColor: "action.hover",
+                                transform: "translateY(-2px)",
+                            },
                         }}
                     >
-                        <Avatar
-                            sx={{
-                                width: 35,
-                                height: 35,
-                                border: "2px solid",
-                                borderColor: "primary.main",
-                            }}
-                        />
-                    </IconButton>
-                </Box>
+                        Login
+                    </Button>
+                )
+                }
 
+
+                {/* Profile Menu */}
                 <Menu
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
-                    transformOrigin={{ horizontal: "right", vertical: "top" }}
-                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    transformOrigin={{horizontal: "right", vertical: "top"}}
+                    anchorOrigin={{horizontal: "right", vertical: "bottom"}}
                     PaperProps={{
                         elevation: 3,
                         sx: {
@@ -232,12 +296,13 @@ export function Header() {
                                 },
                             }}
                         >
-                            <ListItemIcon sx={{ color: "text.primary" }}>{item.icon}</ListItemIcon>
-                            <ListItemText primary={item.label} />
+                            <ListItemIcon sx={{color: "text.primary"}}>{item.icon}</ListItemIcon>
+                            <ListItemText primary={item.label}/>
                         </MenuItem>
                     ))}
                 </Menu>
 
+                {/* Mobile Navigation Drawer */}
                 <Drawer
                     anchor="left"
                     open={mobileMenuOpen}
@@ -250,7 +315,7 @@ export function Header() {
                         },
                     }}
                 >
-                    <List sx={{ pt: 2 }}>
+                    <List sx={{pt: 2}}>
                         {navItems.map((item) => (
                             <ListItem
                                 key={item.path}
@@ -267,7 +332,7 @@ export function Header() {
                                     },
                                 }}
                             >
-                                <ListItemIcon sx={{ color: "primary.main" }}>{item.icon}</ListItemIcon>
+                                <ListItemIcon sx={{color: "primary.main"}}>{item.icon}</ListItemIcon>
                                 <ListItemText
                                     primary={item.label}
                                     primaryTypographyProps={{
@@ -276,7 +341,7 @@ export function Header() {
                                 />
                             </ListItem>
                         ))}
-                        <Divider sx={{ my: 2 }} />
+                        <Divider sx={{my: 2}}/>
                         {menuItems.map((item) => (
                             <ListItem
                                 key={item.path}
@@ -294,7 +359,7 @@ export function Header() {
                                     },
                                 }}
                             >
-                                <ListItemIcon sx={{ color: "text.primary" }}>{item.icon}</ListItemIcon>
+                                <ListItemIcon sx={{color: "text.primary"}}>{item.icon}</ListItemIcon>
                                 <ListItemText
                                     primary={item.label}
                                     primaryTypographyProps={{
@@ -306,7 +371,14 @@ export function Header() {
                     </List>
                 </Drawer>
             </Toolbar>
+            <CreateEventModal
+                open={createEventOpen}
+                onClose={() => setCreateEventOpen(false)}
+                onSubmit={async (eventData) => {
+                    setCreateEventOpen(false)
+                }}/>
         </AppBar>
+
     )
 }
 

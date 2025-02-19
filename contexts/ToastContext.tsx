@@ -37,11 +37,11 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
         color: "#cf222e",
     },
     "&.MuiAlert-standardWarning": {
-        backgroundColor: "rgba(255, 171, 0, 0.1)",
+        backgroundColor: "rgb(255,255,255)",
         color: "#9a6700",
     },
     "&.MuiAlert-standardInfo": {
-        backgroundColor: "rgba(84, 174, 255, 0.1)",
+        backgroundColor: "rgb(255,255,255)",
         color: "#0969da",
     },
 }))
