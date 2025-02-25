@@ -18,11 +18,11 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
     (response) => response,
     async (error) => {
-        if (error.status === 401) {
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('auth-storage');
-            router.push('/login');
-        }
+        // if (error.status === 401) {
+        //     localStorage.removeItem('authToken');
+        //     localStorage.removeItem('auth-storage');
+        //     router.push('/login');
+        // }
         return Promise.reject(error.response);
     }
 )

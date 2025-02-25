@@ -6,6 +6,7 @@ import {EventCard} from "@/components/events/EventCard";
 import useEventApi from "@/hooks/useEventApi";
 import {useEffect, useState} from "react";
 import {Event} from "@/types/event";
+import {FETCH_VERIFIED_EVENTS_PATH} from "@/constants/events/eventsApiUrl";
 
 const HomaPage = () => {
     const { fetchEvents, loading, error } = useEventApi();
@@ -17,7 +18,7 @@ const HomaPage = () => {
 
     const getEvents = async () => {
         try {
-            const response = await fetchEvents();
+            const response = await fetchEvents(FETCH_VERIFIED_EVENTS_PATH);
             if (response?.status === 200){
                 setEvents(response?.data?.events);
             }
@@ -29,7 +30,7 @@ const HomaPage = () => {
     return (
         <Container maxWidth="lg" sx={{ py: 4 }}>
             <Box sx={{ mb: 4 }}>
-                <Typography variant="h4" component="h1" gutterBottom>
+                <Typography variant="h4" component="h1" sx={{ color: 'black' }} gutterBottom>
                     Discover Events
                 </Typography>
                 <EventFilters />

@@ -7,9 +7,17 @@ export interface UseAuth {
     register: (firstName: string, lastName: string, email: string, password: string, password_confirmation: string) => Promise<AxiosResponse<any, any>| undefined>;
 }
 
+export interface Role {
+    id: string;
+    role_name: string;
+}
+
 export interface User {
     id: string;
-    role: string;
+    first_name: string;
+    role_id: string;
+    email: string;
+    role: Role;
 }
 
 export interface AuthState {

@@ -10,8 +10,6 @@ import {
     InputAdornment,
     IconButton,
     Alert,
-    FormControlLabel,
-    Checkbox,
 } from "@mui/material"
 import { Visibility, VisibilityOff } from "@mui/icons-material"
 import Link from "next/link"
@@ -42,6 +40,7 @@ export default function LoginPage() {
                 router.push('/');
             }
         }catch (error: any) {
+            console.log(error);
             showToast(error.data.message, "error", "Error")
         }
     }

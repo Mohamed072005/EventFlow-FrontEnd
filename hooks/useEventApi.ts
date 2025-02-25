@@ -30,11 +30,11 @@ const useEventApi = (): UseEventAPI => {
         }
     }
 
-    const fetchEvents = async () => {
+    const fetchEvents = async (api_url: string) => {
         setLoading(true);
         setError(null);
         try {
-            const response = await axiosClient.get(`/get/events`);
+            const response = await axiosClient.get(api_url);
             return response;
         }catch (error) {
             console.log(error);
@@ -43,8 +43,22 @@ const useEventApi = (): UseEventAPI => {
             setLoading(false);
         }
     }
+    
+    const approveEvent = async (event_id: string) => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await axiosClient.put(`/verify/event/${event_id}`);
+            return response;
+        }catch (error: any) {
+            console.log(error);
+            throw error;
+        }finally {
+            setLoading(false);
+        }
+    }
 
-    return { loading, error, createEvent, fetchEvents };
+    return { loading, error, createEvent, fetchEvents, approveEvent };
 }
 
 export default useEventApi;
