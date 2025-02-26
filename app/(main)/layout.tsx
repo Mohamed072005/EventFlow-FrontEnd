@@ -1,4 +1,4 @@
-import {MainLayout} from "@/components/layouts/MainLayout";
+import {MainLayout} from "@/components/layouts/main/MainLayout";
 
 const HomeLayout = ({ children }: { children: React.ReactNode }) => {
     return (

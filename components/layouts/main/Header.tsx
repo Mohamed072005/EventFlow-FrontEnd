@@ -46,7 +46,8 @@ export function Header() {
     const router = useRouter()
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down("md"))
-    const {isAuthenticated, user} = useAuthStore()
+    const {isAuthenticated, user} = useAuthStore();
+    const dashboardPath = user?.role === 'admin' ? "/dashboard/admin" : "/dashboard/organizer"
 
     const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget)
@@ -62,9 +63,6 @@ export function Header() {
     }
 
     const menuItems = [
-        {icon: <Person/>, label: "Profile", path: "/profile"},
-        {icon: <CalendarMonth/>, label: "My Events", path: "/dashboard"},
-        {icon: <Settings/>, label: "Settings", path: "/settings"},
         {icon: <ExitToApp/>, label: "Logout", path: "/login"},
     ]
 
@@ -72,7 +70,7 @@ export function Header() {
         {
             icon: <Dashboard/>,
             label: "Dashboard",
-            path: "/dashboard",
+            path: dashboardPath,
         },
     ]
 
@@ -121,66 +119,12 @@ export function Header() {
                     </Typography>
                 </Box>
 
-                {/* Navigation Section - Desktop */}
-                {/*{!isMobile && (*/}
-                {/*    <Box*/}
-                {/*        sx={{*/}
-                {/*            display: "flex",*/}
-                {/*            gap: 1,*/}
-                {/*            alignItems: "center",*/}
-                {/*            ml: "auto",*/}
-                {/*            mr: 2,*/}
-                {/*        }}*/}
-                {/*    >*/}
-                {/*        {navItems.map((item) => (*/}
-                {/*            <Button*/}
-                {/*                key={item.path}*/}
-                {/*                component={Link}*/}
-                {/*                href={item.path}*/}
-                {/*                startIcon={item.icon}*/}
-                {/*                sx={{*/}
-                {/*                    color: "text.primary",*/}
-                {/*                    px: 2,*/}
-                {/*                    py: 1,*/}
-                {/*                    borderRadius: "12px",*/}
-                {/*                    transition: "all 0.3s ease",*/}
-                {/*                    "&:hover": {*/}
-                {/*                        backgroundColor: "action.hover",*/}
-                {/*                        transform: "translateY(-2px)",*/}
-                {/*                    },*/}
-                {/*                }}*/}
-                {/*            >*/}
-                {/*                {item.label}*/}
-                {/*            </Button>*/}
-                {/*        ))}*/}
-                {/*    </Box>*/}
-                {/*)}*/}
-
-                {/* Actions Section */}
                 {isAuthenticated ? (
                     <>
-                        {!isMobile && (
+                        {!isMobile ? (
                             <>
                                 <Box sx={{display: "flex", gap: 1, alignItems: "center"}}>
-                                    <Button
-                                        component={Link}
-                                        href='/dashboard'
-                                        startIcon={<Dashboard/>}
-                                        sx={{
-                                            color: "text.primary",
-                                            px: 2,
-                                            py: 1,
-                                            borderRadius: "12px",
-                                            transition: "all 0.3s ease",
-                                            "&:hover": {
-                                                backgroundColor: "action.hover",
-                                                transform: "translateY(-2px)",
-                                            },
-                                        }}
-                                    >
-                                        Dashboard
-                                    </Button>
-                                    {user?.role === "organizer" && (
+                                    {user?.role === "user" && (
                                         <Button
                                             startIcon={<Event/>}
                                             onClick={() => setCreateEventOpen(true)}
@@ -199,33 +143,46 @@ export function Header() {
                                             Create Event
                                         </Button>
                                     )}
-                                    <IconButton
-                                        color="primary"
-                                        component={Link}
-                                        href="/notifications"
-                                        sx={{
-                                            color: 'text.primary',
-                                            transition: "transform 0.3s ease",
-                                            "&:hover": {transform: "translateY(-2px)"},
-                                        }}
-                                    >
-                                        <Badge
-                                            badgeContent={4}
-                                            color="error"
+                                    {user?.role === "organizer" && (
+                                        <Button
+                                            component={Link}
+                                            href={dashboardPath}
+                                            startIcon={<Dashboard/>}
                                             sx={{
-                                                "& .MuiBadge-badge": {
-                                                    animation: "pulse 2s infinite",
-                                                    "@keyframes pulse": {
-                                                        "0%": {transform: "scale(0.95)"},
-                                                        "70%": {transform: "scale(1)"},
-                                                        "100%": {transform: "scale(0.95)"},
-                                                    },
+                                                color: "text.primary",
+                                                px: 2,
+                                                py: 1,
+                                                borderRadius: "12px",
+                                                transition: "all 0.3s ease",
+                                                "&:hover": {
+                                                    backgroundColor: "action.hover",
+                                                    transform: "translateY(-2px)",
                                                 },
                                             }}
                                         >
-                                            <NotificationsIcon/>
-                                        </Badge>
-                                    </IconButton>
+                                            Dashboard
+                                        </Button>
+                                    )}
+                                    {user?.role === "admin" && (
+                                        <Button
+                                            component={Link}
+                                            href={dashboardPath}
+                                            startIcon={<Dashboard/>}
+                                            sx={{
+                                                color: "text.primary",
+                                                px: 2,
+                                                py: 1,
+                                                borderRadius: "12px",
+                                                transition: "all 0.3s ease",
+                                                "&:hover": {
+                                                    backgroundColor: "action.hover",
+                                                    transform: "translateY(-2px)",
+                                                },
+                                            }}
+                                        >
+                                            Dashboard
+                                        </Button>
+                                    )}
                                     <IconButton
                                         edge="end"
                                         onClick={handleMenu}
@@ -244,6 +201,48 @@ export function Header() {
                                         />
                                     </IconButton>
                                 </Box>
+                            </>
+                        ) : (
+                            <>
+                                {user?.role === "organizer" && (
+                                    <Button
+                                        startIcon={<Event/>}
+                                        onClick={() => setCreateEventOpen(true)}
+                                        sx={{
+                                            color: "text.primary",
+                                            px: 2,
+                                            py: 1,
+                                            borderRadius: "12px",
+                                            transition: "all 0.3s ease",
+                                            "&:hover": {
+                                                backgroundColor: "action.hover",
+                                                transform: "translateY(-2px)",
+                                            },
+                                        }}
+                                    >
+                                        Create Event
+                                    </Button>
+                                )}
+                                {user?.role === "admin" && (
+                                    <Button
+                                        component={Link}
+                                        href={dashboardPath}
+                                        startIcon={<Dashboard/>}
+                                        sx={{
+                                            color: "text.primary",
+                                            px: 2,
+                                            py: 1,
+                                            borderRadius: "12px",
+                                            transition: "all 0.3s ease",
+                                            "&:hover": {
+                                                backgroundColor: "action.hover",
+                                                transform: "translateY(-2px)",
+                                            },
+                                        }}
+                                    >
+                                        Dashboard
+                                    </Button>
+                                )}
                             </>
                         )}
                     </>

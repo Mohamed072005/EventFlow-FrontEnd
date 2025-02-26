@@ -1,34 +1,23 @@
 "use client"
 
-import { Card, CardContent, CardMedia, Typography, Button, Box, LinearProgress, Chip } from "@mui/material"
-import { LocationOn, CalendarToday, Group } from "@mui/icons-material"
-import { format } from "date-fns"
-import EventImage from '../../public/images/React-icon.svg.png'
+import {Card, CardContent, CardMedia, Typography, Button, Box, LinearProgress, Chip} from "@mui/material"
+import {LocationOn, CalendarToday, Group} from "@mui/icons-material"
+import {format} from "date-fns"
+import {Event} from "@/types/event"
 
 interface EventCardProps {
-    id: string
-    title: string
-    description: string
-    date: string
-    location: string
-    participants: number
-    maxParticipants: number
-    imageUrl: string
+    event: Event;
+    setDetailsModalOpen: () => void;
+
 }
 
 export function EventCard({
-                              id,
-                              title,
-                              description,
-                              date,
-                              location,
-                              participants,
-                              maxParticipants,
-                              imageUrl,
+                              event,
+                              setDetailsModalOpen,
                           }: EventCardProps) {
-    const participationProgress = (participants / maxParticipants) * 100
+    const participationProgress = (event?.participants_number / event?.max_participants_number) * 100
     const isAlmostFull = participationProgress >= 80
-    const isFull = participants >= maxParticipants
+    const isFull = event?.participants_number >= event?.max_participants_number
 
     return (
         <Card
@@ -45,12 +34,12 @@ export function EventCard({
                 overflow: 'hidden',
             }}
         >
-            <Box sx={{ position: 'relative' }}>
+            <Box sx={{position: 'relative'}}>
                 <CardMedia
                     component="img"
                     height="200"
                     image='https://cdn.pixabay.com/photo/2016/11/23/15/48/audience-1853662_1280.jpg'
-                    alt={title}
+                    alt={event?.event_name}
                     sx={{
                         objectFit: 'cover',
                     }}
@@ -69,7 +58,7 @@ export function EventCard({
                             label="Full"
                             color="error"
                             size="small"
-                            sx={{ backgroundColor: 'error.main', color: 'white' }}
+                            sx={{backgroundColor: 'error.main', color: 'white'}}
                         />
                     )}
                     {!isFull && isAlmostFull && (
@@ -77,12 +66,12 @@ export function EventCard({
                             label="Almost Full"
                             color="warning"
                             size="small"
-                            sx={{ backgroundColor: 'warning.main', color: 'white' }}
+                            sx={{backgroundColor: 'warning.main', color: 'white'}}
                         />
                     )}
                 </Box>
             </Box>
-            <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+            <CardContent sx={{flexGrow: 1, display: 'flex', flexDirection: 'column'}}>
                 <Typography
                     gutterBottom
                     variant="h6"
@@ -93,7 +82,7 @@ export function EventCard({
                         lineHeight: 1.3,
                     }}
                 >
-                    {title}
+                    {event?.event_name}
                 </Typography>
                 <Typography
                     variant="body2"
@@ -107,26 +96,26 @@ export function EventCard({
                         WebkitBoxOrient: 'vertical',
                     }}
                 >
-                    {description}
+                    {event?.description}
                 </Typography>
-                <Box sx={{ display: "flex", flexDirection: 'column', gap: 1.5, mb: 'auto' }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <CalendarToday fontSize="small" sx={{ color: 'primary.main' }} />
-                        <Typography variant="body2" sx={{ color: 'text.primary' }}>
-                            {format(new Date(date), "MMM d, yyyy")}
+                <Box sx={{display: "flex", flexDirection: 'column', gap: 1.5, mb: 'auto'}}>
+                    <Box sx={{display: "flex", alignItems: "center", gap: 1}}>
+                        <CalendarToday fontSize="small" sx={{color: 'primary.main'}}/>
+                        <Typography variant="body2" sx={{color: 'text.primary'}}>
+                            {event?.date ? format(new Date(event?.date), "EEEE, MMMM d, yyyy") : "N/A"}
                         </Typography>
                     </Box>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                        <LocationOn fontSize="small" sx={{ color: 'primary.main' }} />
-                        <Typography variant="body2" sx={{ color: 'text.primary' }}>
-                            {location}
+                    <Box sx={{display: "flex", alignItems: "center", gap: 1}}>
+                        <LocationOn fontSize="small" sx={{color: 'primary.main'}}/>
+                        <Typography variant="body2" sx={{color: 'text.primary'}}>
+                            {event?.location}
                         </Typography>
                     </Box>
                     <Box>
-                        <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
-                            <Group fontSize="small" sx={{ color: 'primary.main' }} />
-                            <Typography variant="body2" sx={{ color: 'text.primary' }}>
-                                {participants} / {maxParticipants} participants
+                        <Box sx={{display: "flex", alignItems: "center", gap: 1, mb: 1}}>
+                            <Group fontSize="small" sx={{color: 'primary.main'}}/>
+                            <Typography variant="body2" sx={{color: 'text.primary'}}>
+                                {event?.participants_number} / {event?.max_participants_number} participants
                             </Typography>
                         </Box>
                         <LinearProgress
@@ -146,7 +135,7 @@ export function EventCard({
                 <Button
                     variant="contained"
                     fullWidth
-                    href={`/events/${id}`}
+                    onClick={setDetailsModalOpen}
                     sx={{
                         mt: 3,
                         textTransform: 'none',

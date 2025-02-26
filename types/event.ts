@@ -1,10 +1,12 @@
 import {AxiosResponse} from "axios";
+import {User} from "@/types/user";
 
 export interface UseEventAPI {
     loading: boolean,
     error: string | null,
     createEvent: (eventFormDataL: EventFormData) => Promise<AxiosResponse<any, any>| undefined>,
-    fetchEvents: () => Promise<AxiosResponse<any, any>>
+    fetchEvents: (api_url: string) => Promise<AxiosResponse<any, any>>,
+    approveEvent: (event_id: string) => Promise<AxiosResponse<any, any>>
 }
 
 export interface EventFormData {
@@ -30,4 +32,5 @@ export interface Event {
     created_at: string;
     updated_at: string;
     verified_at: string;
+    user?: User
 }

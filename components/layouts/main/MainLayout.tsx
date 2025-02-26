@@ -4,7 +4,6 @@ import type React from "react"
 
 import { Box, Container, useTheme } from "@mui/material"
 import { Header } from "./Header"
-// import { NotificationList } from "../notifications/NotificationList"
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
     const theme = useTheme()
