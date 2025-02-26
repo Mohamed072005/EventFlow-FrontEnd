@@ -28,6 +28,11 @@ const AdminDashboardLayout: React.FC<AdminDashboardLayoutProps> = ({ children })
             label: 'Users',
             icon: 'Users',
             href: "/dashboard/admin/users",
+        },
+        {
+            label: 'Home',
+            icon: 'Home',
+            href: "/",
         }
     ]
     return (

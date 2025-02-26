@@ -14,10 +14,20 @@ interface NavItem {
 const OrganizerDashboardLayout: React.FC<OrganizerDashboardLayoutProps> = ({ children }) => {
     const navItems: NavItem[] = [
         {
-            label: "Total Events",
-            icon: 'Calendar',
+            label: "Dashboard",
+            icon: 'LayoutDashboard',
             href: "/dashboard/organizer",
         },
+        {
+            label: 'Your Events',
+            icon: 'Calendar',
+            href: "/dashboard/organizer/events",
+        },
+        {
+            label: 'Home',
+            icon: 'Home',
+            href: "/",
+        }
     ]
     return (
         <>

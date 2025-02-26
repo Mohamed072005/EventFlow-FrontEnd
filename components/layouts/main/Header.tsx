@@ -63,9 +63,6 @@ export function Header() {
     }
 
     const menuItems = [
-        {icon: <Person/>, label: "Profile", path: "/profile"},
-        {icon: <CalendarMonth/>, label: "My Events", path: dashboardPath},
-        {icon: <Settings/>, label: "Settings", path: "/settings"},
         {icon: <ExitToApp/>, label: "Logout", path: "/login"},
     ]
 
@@ -186,33 +183,6 @@ export function Header() {
                                             Dashboard
                                         </Button>
                                     )}
-                                    <IconButton
-                                        color="primary"
-                                        component={Link}
-                                        href="/notifications"
-                                        sx={{
-                                            color: 'text.primary',
-                                            transition: "transform 0.3s ease",
-                                            "&:hover": {transform: "translateY(-2px)"},
-                                        }}
-                                    >
-                                        <Badge
-                                            badgeContent={4}
-                                            color="error"
-                                            sx={{
-                                                "& .MuiBadge-badge": {
-                                                    animation: "pulse 2s infinite",
-                                                    "@keyframes pulse": {
-                                                        "0%": {transform: "scale(0.95)"},
-                                                        "70%": {transform: "scale(1)"},
-                                                        "100%": {transform: "scale(0.95)"},
-                                                    },
-                                                },
-                                            }}
-                                        >
-                                            <NotificationsIcon/>
-                                        </Badge>
-                                    </IconButton>
                                     <IconButton
                                         edge="end"
                                         onClick={handleMenu}

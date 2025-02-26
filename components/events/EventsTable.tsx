@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import {
     Table,
@@ -11,9 +13,10 @@ import {
     Box,
     Typography,
 } from "@mui/material";
-import { Eye, Check, X } from "lucide-react";
+import { Eye, Check } from "lucide-react";
 import StatusChip from "./StatusChip";
 import { Event } from "@/types/event"
+import useAuthStore from "@/store/authStore";
 
 interface EventsTableProps {
     events: Event[];
@@ -27,6 +30,7 @@ interface EventsTableProps {
 }
 
 export default function EventsTable({events, page, rowsPerPage, onPageChange, onRowsPerPageChange, onAction, handleDetailsDiagonalVisibility}: EventsTableProps) {
+    const { user } = useAuthStore();
     return (
         <TableContainer>
             <Table stickyHeader>
@@ -34,8 +38,13 @@ export default function EventsTable({events, page, rowsPerPage, onPageChange, on
                     <TableRow>
                         <TableCell>Event Name</TableCell>
                         <TableCell>Location</TableCell>
-                        <TableCell>User Role</TableCell>
-                        <TableCell>User Email</TableCell>
+                        {user?.role === 'admin' && (
+                            <>
+                                <TableCell>User Role</TableCell>
+                                <TableCell>User Email</TableCell>
+                            </>
+                        )}
+
                         <TableCell>Date</TableCell>
                         <TableCell>Participants</TableCell>
                         <TableCell>Status</TableCell>
@@ -56,16 +65,20 @@ export default function EventsTable({events, page, rowsPerPage, onPageChange, on
                                         {event?.location}
                                     </Typography>
                                 </TableCell>
-                                <TableCell>
-                                    <Typography variant="body2" color={ event?.user?.role?.role_name === 'organizer' ? 'warning' : 'primary' }>
-                                        <strong>{event?.user?.role?.role_name}</strong>
-                                    </Typography>
-                                </TableCell>
-                                <TableCell>
-                                    <Typography variant="body2" color="text.secondary">
-                                        {event?.user?.email}
-                                    </Typography>
-                                </TableCell>
+                                {user?.role === 'admin' && (
+                                    <>
+                                        <TableCell>
+                                            <Typography variant="body2" color={ event?.user?.role?.role_name === 'organizer' ? 'warning' : 'primary' }>
+                                                <strong>{event?.user?.role?.role_name}</strong>
+                                            </Typography>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Typography variant="body2" color="text.secondary">
+                                                {event?.user?.email}
+                                            </Typography>
+                                        </TableCell>
+                                    </>
+                                )}
                                 <TableCell>
                                     {new Date(event?.date).toLocaleDateString()}
                                 </TableCell>
@@ -86,15 +99,19 @@ export default function EventsTable({events, page, rowsPerPage, onPageChange, on
                                         >
                                             <Eye size={18} />
                                         </IconButton>
-                                        {!event?.verified_at && (
+                                        {user?.role === 'admin' && (
                                             <>
-                                                <IconButton
-                                                    size="small"
-                                                    color="success"
-                                                    onClick={() => onAction(event)}
-                                                >
-                                                    <Check size={18} />
-                                                </IconButton>
+                                                {!event?.verified_at && (
+                                                    <>
+                                                        <IconButton
+                                                            size="small"
+                                                            color="success"
+                                                            onClick={() => onAction(event)}
+                                                        >
+                                                            <Check size={18} />
+                                                        </IconButton>
+                                                    </>
+                                                )}
                                             </>
                                         )}
                                     </Box>

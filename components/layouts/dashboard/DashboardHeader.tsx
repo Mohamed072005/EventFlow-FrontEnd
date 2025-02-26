@@ -20,19 +20,10 @@ import {
     Typography,
 } from "@mui/material"
 import {
-    LayoutDashboard,
-    Calendar,
-    Users,
-    Settings,
     ChevronLeft,
     ChevronRight,
-    Shield,
-    Bell,
-    PlusCircle,
     LogOut,
-    User,
 } from "lucide-react"
-import Link from "next/link"
 import {usePathname, useRouter} from "next/navigation"
 import useAuthStore from "@/store/authStore"
 
@@ -47,71 +38,18 @@ interface NavItem {
 }
 
 interface DashboardHeaderProps {
-    items: NavItem[]
+    items: NavItem[];
+    mobileOpen: boolean;
+    setMobileOpen: (open: boolean) => void;
 }
 
-const DashboardHeader: React.FC<DashboardHeaderProps> = ({ items }) => {
+const DashboardHeader: React.FC<DashboardHeaderProps> = ({ items, setMobileOpen, mobileOpen }) => {
     const [isCollapsed, setIsCollapsed] = useState(false)
     const theme = useTheme()
     const isMobile = useMediaQuery(theme.breakpoints.down("md"))
-    const [mobileOpen, setMobileOpen] = useState(false)
     const pathname = usePathname()
     const { user } = useAuthStore()
     const router = useRouter()
-
-    const mainNavItems: NavItem[] = [
-        {
-            label: "Dashboard",
-            icon: LayoutDashboard,
-            href: "/dashboard",
-        },
-        {
-            label: "Events",
-            icon: Calendar,
-            href: "/dashboard/admin/events",
-        },
-        {
-            label: "Following",
-            icon: Users,
-            href: "/dashboard/following",
-        },
-        {
-            label: "Notifications",
-            icon: Bell,
-            href: "/dashboard/notifications",
-        },
-    ]
-
-    const organizerItems: NavItem[] = [
-        {
-            label: "Create Event",
-            icon: PlusCircle,
-            href: "/dashboard/events/create",
-            role: ["organizer"],
-        },
-    ]
-
-    const adminItems: NavItem[] = [
-        {
-            label: "Admin Panel",
-            icon: Shield,
-            href: "/dashboard/admin",
-            role: ["admin"],
-        },
-    ]
-
-    const bottomNavItems: NavItem[] = [
-        {
-            label: "Profile",
-            icon: User,
-            href: "/dashboard/profile",
-        },
-        {
-            label: "Settings",
-            icon: Settings,
-            href: "/dashboard/settings",
-        },
-    ]
 
     const renderNavItems = (items: NavItem[]) => {
         return items.map((item) => {
@@ -124,7 +62,10 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ items }) => {
                 <ListItem key={item.href} disablePadding sx={{ display: "block" }}>
                     <Tooltip title={isCollapsed ? item.label : ""} placement="right" arrow>
                         <ListItemButton
-                            onClick={() => router.push(item.href)}
+                            onClick={() => {
+                                router.push(item.href);
+                                setMobileOpen(false); // Close the drawer on mobile
+                            }}
                             selected={pathname === item.href}
                             sx={{
                                 minHeight: 48,
@@ -217,7 +158,6 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ items }) => {
             <Box sx={{ mt: "auto" }}>
                 <Divider sx={{ my: 1 }} />
                 <List sx={{ px: 2 }}>
-                    {renderNavItems(bottomNavItems)}
                     <ListItem disablePadding sx={{ display: "block" }}>
                         <ListItemButton
                             onClick={() => {
@@ -314,6 +254,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({ items }) => {
                             borderRight: "none",
                             backgroundImage: "none",
                             boxShadow: (theme) => theme.shadows[2],
+                            zIndex: (theme) => theme.zIndex.drawer + 2
                         },
                     }}
                 >

@@ -40,7 +40,6 @@ export default function LoginPage() {
                 router.push('/');
             }
         }catch (error: any) {
-            console.log(error);
             showToast(error.data.message, "error", "Error")
         }
     }

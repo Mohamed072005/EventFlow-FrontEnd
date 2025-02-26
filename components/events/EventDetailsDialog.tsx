@@ -49,9 +49,7 @@ const EventDetailsDialog: React.FC<EventDetailsDialogProps> = ({open, onClose, e
                 url: window.location.href,
             })
         } else {
-            // Fallback for browsers that don't support the Web Share API
             navigator.clipboard.writeText(window.location.href)
-            // You could show a toast notification here
         }
     }
 

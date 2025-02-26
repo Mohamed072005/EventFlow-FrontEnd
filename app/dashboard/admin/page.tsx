@@ -1,39 +1,55 @@
 "use client"
 
-import { Box, Typography, Grid, Card, CardContent, Button } from "@mui/material"
+import {Box, Typography, Grid, Card, CardContent, Button, Alert} from "@mui/material"
 import { Calendar, Users, Star, TrendingUp } from "lucide-react"
 import Link from "next/link"
+import React, {useEffect, useState} from "react";
+import {AdminStatistics} from "@/types/global";
+import useStatistiqueApi from "@/hooks/useStatistiqueApi";
+import {FETCH_ADMIN_STATISTICS_PATH} from "@/constants/events/eventsApiUrl";
 
 export default function DashboardAdminPage() {
+
+    const [statistics, setStatistics] = useState<AdminStatistics>({ allEvents: 0, allOrganizers: 0, allUsers: 0 });
+    const { fetchStatistique, loading, error } = useStatistiqueApi()
+
+    useEffect(() => {
+        getAdminStatistics()
+    }, []);
+
+    const getAdminStatistics = async () => {
+        try {
+            const response = await fetchStatistique(FETCH_ADMIN_STATISTICS_PATH);
+            if (response.status === 200) {
+                setStatistics(response.data);
+            }
+        }catch (error: any) {
+            console.log(error)
+        }
+    }
+
     const stats = [
         {
             title: "Events",
-            value: "12",
+            value: statistics.allEvents,
             icon: Calendar,
             color: "#2196f3",
             href: "/dashboard/events",
         },
         {
             title: "Users",
-            value: "48",
+            value: statistics.allUsers,
             icon: Users,
             color: "#4caf50",
             href: "/dashboard/following",
         },
         {
             title: "Organizers",
-            value: "3",
+            value: statistics.allOrganizers,
             icon: Star,
             color: "#ff9800",
             href: "/dashboard/events",
-        },
-        {
-            title: "Admins",
-            value: "156",
-            icon: TrendingUp,
-            color: "#f44336",
-            href: "/dashboard/events",
-        },
+        }
     ]
 
     return (
@@ -42,9 +58,16 @@ export default function DashboardAdminPage() {
                 Dashboard
             </Typography>
             <Typography color="text.secondary" sx={{ mb: 4 }}>
-                Welcome back! Here's what's happening with your events.
+                Welcome back! Here's what's happening with your Platform.
             </Typography>
 
+            { error && (
+                <>
+                    <Alert severity="error" sx={{ mb: 2 }}>
+                        {error}
+                    </Alert>
+                </>
+            ) }
             <Grid container spacing={3} sx={{ mb: 4 }}>
                 {stats.map((stat) => (
                     <Grid item xs={12} sm={6} md={3} key={stat.title}>
@@ -65,19 +88,6 @@ export default function DashboardAdminPage() {
                                 <Typography variant="h4" fontWeight="bold">
                                     {stat.value}
                                 </Typography>
-                                <Button
-                                    component={Link}
-                                    href={stat.href}
-                                    sx={{
-                                        mt: 2,
-                                        color: stat.color,
-                                        "&:hover": {
-                                            bgcolor: `${stat.color}10`,
-                                        },
-                                    }}
-                                >
-                                    View Details
-                                </Button>
                             </CardContent>
                         </Card>
                     </Grid>

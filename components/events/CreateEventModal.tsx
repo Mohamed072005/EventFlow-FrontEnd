@@ -15,7 +15,7 @@ import {
     Paper,
     LinearProgress, Alert,
 } from "@mui/material"
-import { Close, CloudUpload, Add as AddIcon, Remove as RemoveIcon, LocationOn, Event } from "@mui/icons-material"
+import { Close, Add as AddIcon, Remove as RemoveIcon, LocationOn, Event } from "@mui/icons-material"
 import { useToast } from "@/contexts/ToastContext"
 import useEventApi from "@/hooks/useEventApi";
 import {EventFormData} from "@/types/event";
@@ -64,7 +64,7 @@ export function CreateEventModal({ open, onClose, onSubmit }: CreateEventModalPr
         try {
             const response = await createEvent(formData);
             if (response?.status === 201) {
-                showToast("Successfully created event", "success", "Success")
+                showToast(response.data.message, "success", "Success")
                 onClose();
             }
         }catch (error: any) {

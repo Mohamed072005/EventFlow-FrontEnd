@@ -23,7 +23,7 @@ const useEventApi = (): UseEventAPI => {
             setLoading(false);
             return response;
         }catch (error: any) {
-            console.log(error);
+            setError(error.response.data.message);
             throw error;
         }finally {
             setLoading(false);
@@ -36,8 +36,8 @@ const useEventApi = (): UseEventAPI => {
         try {
             const response = await axiosClient.get(api_url);
             return response;
-        }catch (error) {
-            console.log(error);
+        }catch (error: any) {
+            setError(error.response.data.message);
             throw error;
         }finally {
             setLoading(false);
@@ -51,7 +51,7 @@ const useEventApi = (): UseEventAPI => {
             const response = await axiosClient.put(`/verify/event/${event_id}`);
             return response;
         }catch (error: any) {
-            console.log(error);
+            setError(error.response.data.message);
             throw error;
         }finally {
             setLoading(false);

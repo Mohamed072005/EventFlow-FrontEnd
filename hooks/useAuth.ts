@@ -1,12 +1,13 @@
 import {UseAuth} from "@/types/user";
-import axiosClient from "@/lib/api";
 import {useState} from "react";
 import useValidate from "@/hooks/useValidate";
+import axiosClient from "@/lib/api";
 
 const useAuth = (): UseAuth => {
     const [loading, setLoading] = useState<boolean>(false);
     const { registerValidation, loginValidation } = useValidate();
     const [error, setError] = useState<string | null>(null);
+
     const login = async (email: string, password: string) => {
         setLoading(true);
         setError(null);

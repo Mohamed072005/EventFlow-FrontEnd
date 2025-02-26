@@ -7,9 +7,8 @@ import {
     Box,
     Paper,
     TextField,
-    Chip,
     Typography,
-    InputAdornment, Alert,
+    InputAdornment, Alert, FormControl, InputLabel, Select, MenuItem,
 } from "@mui/material"
 import { Search } from "lucide-react"
 import { useToast } from "@/contexts/ToastContext"
@@ -30,9 +29,14 @@ export default function ManageEventsPage() {
     const [confirmationOpen, setConfirmationOpen] = useState<boolean>(false);
     const [selectedEventForDetails, setSelectedEventForDetails] = useState<Event | null>(null)
     const [openEventDetails, setOpenEventDetails] = useState<boolean>(false);
-    const [actionType, setActionType] = useState<"approve" | "reject" | null>(null)
+    const [roleFilter, setRoleFilter] = useState<string>("all");
     const { showToast } = useToast()
     const { fetchEvents, loading, error, approveEvent } = useEventApi();
+    const roles = [
+        { value: "all", label: "All Roles" },
+        { value: "organizer", label: "Organizer" },
+        { value: "user", label: "User" },
+    ];
 
     useEffect(() => {
         getEvents()
@@ -69,34 +73,27 @@ export default function ManageEventsPage() {
 
         try {
             const response = await approveEvent(selectedEvent.id);
-            console.log(response)
             if (response?.status === 200) {
                 showToast(response.data.message, "success", 'Success');
                 await getEvents();
             }
-        } catch (error) {
-            showToast("Failed to update event status", "error", 'Error');
+        } catch (error: any) {
+            showToast(error?.response?.data?.message, "error", 'Error');
         }
 
         setConfirmationOpen(false)
         setSelectedEvent(null)
-        setActionType(null)
-    }
-
-    const getStatusChip = (status: Event["verified_at"]) => {
-        const statusConfig = status ? { color: "success" as const, label: "Approved" } : { color: "error" as const, label: "Rejected" }
-        return <Chip size="small" {...statusConfig} />
     }
 
     const filteredEvents = events?.filter((event) => {
         const matchesSearch =
             event.event_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            event?.user?.role?.role_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            event.location.toLowerCase().includes(searchTerm.toLowerCase())
+            event.location.toLowerCase().includes(searchTerm.toLowerCase());
 
-        // const matchesStatus = filterStatus === "all" || event.status === filterStatus
+        const matchesRole =
+            roleFilter === "all" || event.user?.role?.role_name === roleFilter;
 
-        return matchesSearch
+        return matchesSearch && matchesRole;
     })
 
     const handleDetailsDiagonalVisibility = (event: Event | null) => {
@@ -125,6 +122,21 @@ export default function ManageEventsPage() {
                         ),
                     }}
                 />
+
+                <FormControl sx={{ minWidth: 150 }} size="small">
+                    <InputLabel>Filter by Role</InputLabel>
+                    <Select
+                        value={roleFilter}
+                        onChange={(e) => setRoleFilter(e.target.value)}
+                        label="Filter by Role"
+                    >
+                        {roles.map((role) => (
+                            <MenuItem key={role.value} value={role.value}>
+                                {role.label}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
             </Box>
 
             { error && (

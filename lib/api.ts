@@ -1,6 +1,7 @@
 import axios from "axios";
 import {router} from "next/client";
 
+
 const axiosClient = axios.create({
     baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
 })
@@ -18,11 +19,12 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
     (response) => response,
     async (error) => {
-        // if (error.status === 401) {
-        //     localStorage.removeItem('authToken');
-        //     localStorage.removeItem('auth-storage');
-        //     router.push('/login');
-        // }
+        console.log(error);
+        if (error.status === 401) {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('auth-storage');
+            window.location.href = '/login';
+        }
         return Promise.reject(error.response);
     }
 )
